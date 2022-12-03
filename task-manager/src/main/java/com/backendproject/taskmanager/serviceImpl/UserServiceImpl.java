@@ -1,6 +1,7 @@
 package com.backendproject.taskmanager.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.backendproject.taskmanager.entity.Users;
@@ -14,10 +15,14 @@ public class UserServiceImpl implements UserService {
 	//Autowired repository of users
 	@Autowired
 	UserRepo userRepo;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserDto createUser(UserDto userDto) {
 		// userDto is not an entity of Users
+		userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		Users users = userDtoToUsers(userDto); //converted userDto to users using this method
 		Users savedUser = userRepo.save(users);
 		
