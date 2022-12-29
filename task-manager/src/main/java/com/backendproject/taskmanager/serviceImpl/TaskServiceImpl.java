@@ -80,4 +80,17 @@ public class TaskServiceImpl implements TaskService{
 		taskRepo.deleteById(taskid);
 	}
 
+	@Override
+	public TaskDto updateTask(long userid, TaskDto taskDto) {
+		Users users = userRepo.findById(userid).orElseThrow(
+				() -> new UserNotFound(String.format("User Id %d not found", userid))
+					);
+		
+		Task task = modelMapper.map(taskDto, Task.class);
+		task.setUsers(users);
+		int updatedTask = taskRepo.updateTask(task.getId(),task.getTaskname());
+
+		return modelMapper.map(updatedTask, TaskDto.class);
+	}
+
 }
